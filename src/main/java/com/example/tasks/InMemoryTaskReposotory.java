@@ -26,6 +26,7 @@ public class InMemoryTaskReposotory implements TaskRepository {
             if (task.getId().equals(id)) {
                 return Optional.of(task);
             }
+
         }
         return Optional.empty();
     }
@@ -34,10 +35,10 @@ public class InMemoryTaskReposotory implements TaskRepository {
     public boolean deleteById(Long id) {
         Optional<Task> task = this.findById(id);
 
-        if (task.isPresent()) {
-            return tasks.remove(task.get());
+        if (task.isEmpty()) {
+            return false;
         }
 
-        return false;
+        return tasks.remove(task.get());
     }
 }

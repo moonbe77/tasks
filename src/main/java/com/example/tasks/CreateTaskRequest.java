@@ -1,6 +1,8 @@
 package com.example.tasks;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record CreateTaskRequest(
-        String title,
-        String description) {
+                @NotBlank(message = "Title is required") String title,
+                @NotBlank(message = "Description is required") String description) {
 }

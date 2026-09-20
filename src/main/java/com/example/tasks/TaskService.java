@@ -73,6 +73,17 @@ public class TaskService {
 
     }
 
+    public Task getTask(Long id) {
+        Optional<Task> task = repository.findById(id);
+
+        if (task.isEmpty()) {
+            throw new TaskNotFoundException(id);
+        }
+
+        return task.get();
+
+    }
+
     public boolean deleteById(Long id) {
         return repository.deleteById(id);
     }
