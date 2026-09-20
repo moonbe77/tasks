@@ -49,4 +49,25 @@ public class TaskControllerTests {
         assertEquals(0, service.getTaskCount());
     }
 
+    @Test
+    void marksTaskAsCompleted() throws Exception {
+        // create task
+        TaskRepository repository = new InMemoryTaskReposotory();
+        TaskService service = new TaskService(repository);
+        TaskController controller = new TaskController(service);
+
+        CreateTaskRequest request = new CreateTaskRequest("POSTMAN", "this is a description from postman");
+        controller.createTask(request);
+
+        // PATCH /tasks/{id}
+        UpdateTaskRequest updateRequest = new UpdateTaskRequest(true);
+        ResponseEntity<Task> response = controller.completeTask(1L,updateRequest);
+
+        // expect 200
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+
+        // expect completed == true
+        assertEquals(true, response.getBody().isCompleted());
+    }
+
 }

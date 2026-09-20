@@ -13,4 +13,6 @@ public interface TaskRepository {
 
     boolean deleteById(Long id);
 
+    List<Task> findCompleted();
+
 }

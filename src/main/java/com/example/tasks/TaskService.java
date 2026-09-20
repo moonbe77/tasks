@@ -51,19 +51,7 @@ public class TaskService {
 
     public List<Task> getCompletedTasks() {
 
-        // final List<Task> completed = tasks.stream().filter(task ->
-        // task.isCompleted()).toList();
-
-        final List<Task> completed = new ArrayList<>();
-
-        for (Task task : repository.findAll()) {
-            if (task.isCompleted()) {
-                completed.add(task);
-            }
-
-        }
-
-        return completed;
+        return repository.findCompleted();
 
     }
 
@@ -82,6 +70,16 @@ public class TaskService {
 
         return task.get();
 
+    }
+
+    public Task completeTask(Long id, Boolean completed) {
+        Task task = getTask(id);
+
+        if (!task.isCompleted()) {
+            task.setCompleted(completed);
+        }
+
+        return task;
     }
 
     public boolean deleteById(Long id) {

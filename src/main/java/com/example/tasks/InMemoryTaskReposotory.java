@@ -22,13 +22,10 @@ public class InMemoryTaskReposotory implements TaskRepository {
 
     @Override
     public Optional<Task> findById(Long id) {
-        for (Task task : tasks) {
-            if (task.getId().equals(id)) {
-                return Optional.of(task);
-            }
 
-        }
-        return Optional.empty();
+        return tasks.stream()
+                .filter(task -> task.getId().equals(id))
+                .findFirst();
     }
 
     @Override
@@ -40,5 +37,12 @@ public class InMemoryTaskReposotory implements TaskRepository {
         }
 
         return tasks.remove(task.get());
+    }
+
+    @Override
+    public List<Task> findCompleted() {
+        return tasks.stream()
+                .filter(task -> task.isCompleted())
+                .toList();
     }
 }

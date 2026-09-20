@@ -18,7 +18,7 @@ public class TasksServiceTest {
         assertEquals(2, service.getTaskCount());
 
         Task task = service.getTaskById(1L).get();
-        task.complete();
+        task.setCompleted(true);
 
         assertEquals(1, service.getCompletedTaskCount());
     }
@@ -34,7 +34,7 @@ public class TasksServiceTest {
         assertEquals(2, service.getTaskCount());
 
         Task task = service.getTaskById(1L).get();
-        task.complete();
+        task.setCompleted(true);
         assertEquals(1, service.getCompletedTaskCount());
         assertEquals(task, service.getCompletedTasks().get(0));
     }
@@ -96,5 +96,22 @@ public class TasksServiceTest {
         boolean deleted = service.deleteById(2L);
         assertEquals(false, deleted);
         assertEquals(1, service.getTaskCount());
+    }
+
+    @Test
+    void getCompletedTaskCount() {
+        TaskRepository repository = new InMemoryTaskReposotory();
+        TaskService service = new TaskService(repository);
+
+        Task task1 = service.createTask("title", "description");
+        Task task2 = service.createTask("title2", "description2");
+        Task task3 = service.createTask("title3", "description3");
+
+        task1.setCompleted(true);
+        task3.setCompleted(true);
+
+        assertEquals(3, service.getTaskCount());
+
+        assertEquals(2, service.getCompletedTasks().size());
     }
 }

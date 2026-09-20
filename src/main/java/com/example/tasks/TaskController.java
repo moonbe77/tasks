@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,6 +43,18 @@ public class TaskController {
     public ResponseEntity<Task> getTask(
             @PathVariable Long id) {
         Task task = taskService.getTask(id);
+        return ResponseEntity.ok(task);
+    }
+
+    @GetMapping("/completed")
+    public List<Task> getCompletedTasks() {
+        return taskService.getCompletedTasks();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Task> completeTask(
+            @PathVariable Long id, @RequestBody UpdateTaskRequest request) {
+        Task task = taskService.completeTask(id, request.completed());
         return ResponseEntity.ok(task);
     }
 
