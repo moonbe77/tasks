@@ -20,42 +20,51 @@ import jakarta.validation.Valid;
 public class TaskController {
     private final TaskService taskService;
 
+    private TaskResponse toResponse(Task task) {
+        return new TaskResponse(
+                task.getId(),
+                task.getTitle(),
+                task.getDescription(),
+                task.isCompleted());
+    }
+
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
     @GetMapping
-    public List<Task> getTasks() {
-        return taskService.getTasks();
+    public List<TaskResponse> getTasks() {
+        return taskService.getTasks().stream().map(this::toResponse).toList();
     }
 
     // POST /tasks
     @PostMapping
-    public ResponseEntity<Task> createTask(@Valid @RequestBody CreateTaskRequest request) {
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody CreateTaskRequest request) {
 
         Task task = taskService.createTask(request.title(), request.description());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(task);
+        return ResponseEntity.status(HttpStatus.CREATED).body(toResponse(task));
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> getTask(
+    public ResponseEntity<TaskResponse> getTask(
             @PathVariable Long id) {
         Task task = taskService.getTask(id);
-        return ResponseEntity.ok(task);
+        TaskResponse response = toResponse(task);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/completed")
-    public List<Task> getCompletedTasks() {
-        return taskService.getCompletedTasks();
+    public List<TaskResponse> getCompletedTasks() {
+        return taskService.getCompletedTasks().stream().map(this::toResponse).toList();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Task> completeTask(
+    public ResponseEntity<TaskResponse> completeTask(
             @PathVariable Long id, @RequestBody UpdateTaskRequest request) {
         Task task = taskService.completeTask(id, request.completed());
-        return ResponseEntity.ok(task);
+        return ResponseEntity.ok(toResponse(task));
     }
 
     @DeleteMapping("/{id}")

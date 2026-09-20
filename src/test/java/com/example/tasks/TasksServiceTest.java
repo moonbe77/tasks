@@ -3,14 +3,21 @@ package com.example.tasks;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class TasksServiceTest {
+    TaskRepository repository = new InMemoryTaskReposotory();
+    TaskService service = new TaskService(repository);
+
+    @BeforeEach
+    void setUp() {
+        repository = new InMemoryTaskReposotory();
+        service = new TaskService(repository);
+    }
 
     @Test
     void countsCompletedTasks() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         // Act
         service.createTask("title", "description");
@@ -25,8 +32,6 @@ public class TasksServiceTest {
 
     @Test
     void returnsCompletedTasks() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         // Act
         service.createTask("title", "description");
@@ -41,8 +46,6 @@ public class TasksServiceTest {
 
     @Test
     void newlyCreatedTaskIsNotCompleted() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         service.createTask("title", "description");
         assertEquals(0, service.getCompletedTaskCount());
@@ -51,8 +54,6 @@ public class TasksServiceTest {
 
     @Test
     void findTaskById() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         service.createTask("Learn Java", "description");
 
@@ -64,8 +65,6 @@ public class TasksServiceTest {
 
     @Test
     void returnsEmptyIfNotExists() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         service.createTask("title", "description");
         Optional<Task> foundTask = service.getTaskById(2L);
@@ -74,8 +73,6 @@ public class TasksServiceTest {
 
     @Test
     void deleteTaskById() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         service.createTask("title", "description");
         assertEquals(1, service.getTaskCount());
@@ -87,8 +84,6 @@ public class TasksServiceTest {
 
     @Test
     void deleteTaskByIdReturnsFalseIfNotExists() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         service.createTask("title", "description");
         assertEquals(1, service.getTaskCount());
@@ -100,8 +95,6 @@ public class TasksServiceTest {
 
     @Test
     void getCompletedTaskCount() {
-        TaskRepository repository = new InMemoryTaskReposotory();
-        TaskService service = new TaskService(repository);
 
         Task task1 = service.createTask("title", "description");
         Task task2 = service.createTask("title2", "description2");

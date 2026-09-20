@@ -65,4 +65,28 @@ class TaskControllerValidationTest {
                                 .andExpect(jsonPath("$.status").value(404))
                                 .andExpect(jsonPath("$.message").value("Task not found with ID: 999"));
         }
+
+        @Test
+        void returnsTaskForExistingTask() throws Exception {
+                // First, create a task
+                mockMvc.perform(
+                                post("/tasks")
+                                                .contentType(MediaType.APPLICATION_JSON)
+                                                .content("""
+                                                                {
+                                                                    "title": "Sample Task",
+                                                                    "description": "Sample Description"
+                                                                }
+                                                                """))
+                                .andExpect(status().isCreated());
+
+                // Then, retrieve the task by ID
+                mockMvc.perform(
+                                get("/tasks/1"))
+                                .andExpect(status().isOk())
+                                .andExpect(jsonPath("$.id").value(1))
+                                .andExpect(jsonPath("$.title").value("Sample Task"))
+                                .andExpect(jsonPath("$.description").value("Sample Description"))
+                                .andExpect(jsonPath("$.completed").value(false));
+        }
 }
